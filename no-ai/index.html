@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>北师大心理辅导平台｜体验官公测</title>
+  <style>
+    :root {
+      --bnu-blue: #004098;
+      --bnu-blue-light: #e6effa;
+      --bnu-blue-hover: #003073;
+      --bg-page: #f4f6f9;
+      --bg-card: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+      --border-color: #e2e8f0;
+      --shadow-sm: 0 2px 8px rgba(0, 30, 80, 0.04);
+      --shadow-lg: 0 12px 36px rgba(0, 30, 80, 0.08);
+      --radius-lg: 16px;
+      --radius-md: 10px;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: var(--bg-page); color: var(--text-main); -webkit-font-smoothing: antialiased; }
+    .hidden { display: none !important; }
+    .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; background: linear-gradient(135deg, #f4f6f9 0%, #e6effa 100%); }
+    .hero-card { width: min(800px, 100%); background: var(--bg-card); border-radius: 20px; box-shadow: var(--shadow-lg); padding: 50px 60px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.6); }
+    .hero-logos { display: flex; justify-content: center; margin-bottom: 24px; }
+    .hero-logos .logo-single { height: 90px; width: 90px; border-radius: 50%; box-shadow: var(--shadow-sm); object-fit: contain; background: #fff; }
+    .tag { display: inline-block; padding: 6px 16px; border-radius: 999px; background: var(--bnu-blue-light); color: var(--bnu-blue); font-size: 13px; font-weight: 700; margin-bottom: 20px; letter-spacing: 0.5px; }
+    h1 { margin: 0 0 24px; font-size: 28px; color: var(--bnu-blue); font-weight: 800; }
+    .hero-content { text-align: left; color: #334155; font-size: 16px; line-height: 1.8; background: #f8fafc; padding: 30px; border-radius: var(--radius-lg); border: 1px solid var(--border-color); }
+    .hero-content p { margin: 0; }
+    .hero-content p + p { margin-top: 16px; }
+    .btn { margin-top: 36px; background: var(--bnu-blue); color: white; border: none; border-radius: 999px; padding: 16px 40px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0, 64, 152, 0.2); }
+    .btn:hover { background: var(--bnu-blue-hover); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0, 64, 152, 0.3); }
+    .page { width: min(1200px, 100%); margin: 30px auto; background: var(--bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); overflow: hidden; }
+    .topbar { padding: 16px 32px; border-bottom: 1px solid var(--border-color); background: #ffffff; display: flex; align-items: center; justify-content: space-between; }
+    .brand-wrap { display: flex; align-items: center; gap: 20px; }
+    .brand-logo { height: 42px; object-fit: contain; }
+    .brand-text .brand { font-size: 18px; font-weight: 700; color: var(--text-main); }
+    .brand-text .sub { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
+    .layout { display: grid; grid-template-columns: 420px 1fr; min-height: calc(100vh - 180px); background: #fcfcfd; }
+    .list-pane { padding: 24px; border-right: 1px solid var(--border-color); background: #f8fafc; overflow-y: auto; }
+    .section-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+    .section-title::before { content: ''; display: block; width: 4px; height: 16px; background: var(--bnu-blue); border-radius: 2px; }
+    .cards { display: grid; gap: 16px; }
+    .card { border: 1px solid var(--border-color); border-radius: var(--radius-md); background: #fff; padding: 20px; cursor: pointer; transition: all 0.2s ease; }
+    .card:hover { border-color: #cbd5e1; box-shadow: var(--shadow-sm); transform: translateY(-1px); }
+    .card.selected { border-color: var(--bnu-blue); box-shadow: 0 0 0 1px var(--bnu-blue); background: #fdfdff; }
+    .card-header { display: flex; gap: 14px; align-items: center; margin-bottom: 14px; }
+    .avatar { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, var(--bnu-blue-light), #dbeafe); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--bnu-blue); font-size: 22px; }
+    .avatar.large { width: 72px; height: 72px; font-size: 28px; }
+    .name { font-size: 17px; font-weight: 700; color: var(--text-main); }
+    .meta-top { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
+    .mini-meta { display: flex; gap: 12px; margin-bottom: 12px; font-size: 13px; color: var(--text-muted); }
+    .mini-meta span { display: flex; align-items: center; gap: 4px; }
+    .mini-meta span::before { content: '•'; color: #cbd5e1; }
+    .mini-meta span:first-child::before { display: none; }
+    .intro-line { color: #475569; font-size: 14px; line-height: 1.6; margin-bottom: 14px; }
+    .chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip, .mini-chip { padding: 4px 10px; border-radius: 6px; background: #f1f5f9; color: #475569; font-size: 12px; font-weight: 500; }
+    .disclosure-mini { margin-top: 14px; padding: 10px 12px; border-radius: 6px; background: #f8fafc; border: 1px solid var(--border-color); border-left: 3px solid var(--bnu-blue); }
+    .disclosure-mini-title { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--bnu-blue); font-weight: 700; margin-bottom: 4px; }
+    .disclosure-mini-body { font-size: 12px; color: #475569; line-height: 1.5; }
+    .detail-pane { padding: 40px; background: #ffffff; }
+    .detail-empty { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: var(--text-light); }
+    .detail-empty svg { width: 64px; height: 64px; color: #e2e8f0; margin-bottom: 16px; }
+    .detail-card { display: none; animation: fadeIn 0.3s ease; }
+    .detail-card.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .detail-header-wrap { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; }
+    .detail-header { display: flex; gap: 20px; align-items: center; }
+    .detail-name-row { display: flex; align-items: baseline; gap: 12px; }
+    .detail-name-row .name { font-size: 24px; }
+    .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 30px; padding: 20px; background: #f8fafc; border-radius: var(--radius-md); border: 1px solid var(--border-color); }
+    .stat-item { display: flex; flex-direction: column; gap: 4px; }
+    .stat-label { font-size: 13px; color: var(--text-muted); }
+    .stat-value { font-size: 15px; font-weight: 600; color: var(--text-main); }
+    .disclosure { margin: 24px 0; padding: 16px 20px; border-radius: 8px; background: #f8fafc; border: 1px solid var(--border-color); border-left: 4px solid var(--bnu-blue); }
+    .disclosure-title { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--bnu-blue); font-weight: 700; margin-bottom: 8px; }
+    .disclosure-body { font-size: 14px; color: #334155; line-height: 1.6; }
+    .block { margin-top: 32px; }
+    .block h3 { margin: 0 0 16px; font-size: 16px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+    .block ul { margin: 0; padding-left: 20px; color: #475569; }
+    .block li { font-size: 14px; line-height: 2; margin-bottom: 4px; }
+    @media (max-width: 920px) { .layout { grid-template-columns: 1fr; } .list-pane { border-right: none; border-bottom: 1px solid var(--border-color); } .hero-card { padding: 30px; } }
+  </style>
+</head>
+<body>
+  <section id="cover" class="hero">
+    <div class="hero-card">
+      <div class="hero-logos"><img src="bnu_logo.jpg" alt="北京师范大学" class="logo-single" /></div>
+      <div class="tag">心理咨询师团队遴选 - 民意调查</div>
+      <h1>【体验官邀请函】</h1>
+      <div class="hero-content">
+        <p>北京师范大学心理学部正在筹划全新的公众心理辅导平台。为提供更契合大众需求的高质量服务，我们现面向社会进行首批咨询师团队的遴选与页面公测。</p>
+        <p>接下来，您将浏览几位咨询师的主页信息。请根据认真阅读，并完成后续的评价与选择。感谢您的宝贵意见！</p>
+      </div>
+      <button class="btn" onclick="startStudy()">接受邀请，开始体验</button>
+    </div>
+  </section>
+  <main id="app" class="page hidden">
+    <div class="topbar">
+      <div class="brand-wrap">
+        <img src="psychology_logo.jpg" alt="北京师范大学心理学部" class="brand-logo" />
+        <div class="brand-text">
+          <div class="brand">北师大心理辅导平台 (公测版)</div>
+          <div class="sub">点击左侧卡片，查看咨询师详细履历</div>
+        </div>
+      </div>
+    </div>
+    <div class="layout">
+      <section class="list-pane">
+        <div class="section-title">推荐咨询师</div>
+        <div class="cards" id="cards"></div>
+      </section>
+      <aside class="detail-pane">
+        <div id="empty" class="detail-empty">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path></svg>
+          <div style="font-size:16px;font-weight:600;color:#64748b;margin-bottom:8px;">请在左侧选择一位咨询师</div>
+          <div style="font-size:14px;">此处将展示咨询师的详细受训背景与执业说明</div>
+        </div>
+        <div id="details"></div>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    // 【不使用AI组】数据
+    const counselors = [
+      {
+        "id": "lin", "short": "林", "name": "咨询师 林", "degree": "临床与咨询心理学硕士", "years": "6年从业经验", 
+        "rating": "4.9（842评价）", "sessions": "860+次", "mode": "在线视频", "duration": "50分钟", "fee": "¥500/次", "wait": "约3天", "schedule": "周三 19:00", 
+        "oneLine": "重视在稳定、尊重的关系中帮助来访者理解自身处境与需求。", 
+        "styleTags": ["稳定陪伴", "情绪梳理", "关系理解"], 
+        "clients": ["高中生", "大学生", "青年职场人"], 
+        "issues": ["学业与工作压力", "情绪困扰", "人际沟通", "自我探索"], 
+        "certs": ["中国心理学会注册系统注册心理师", "国家二级心理咨询师", "国际EAP协会认证专员"], 
+        "exp": ["高校心理中心兼职咨询师 / 1200小时+", "知名互联网企业EAP心理支持 / 500小时+", "情绪管理与正念工作坊带领者 / 80小时+"], 
+        "train": ["认知行为治疗(CBT)连续培训", "正念减压(MBSR)专业训练", "危机识别与伦理胜任培训"], 
+        "disclosureMini": "工作过程中不使用生成式AI辅助。",
+        "disclosure": "AI披露声明：在工作过程中，我不使用生成式AI工具，而是由本人完成信息分析、问题理解与后续咨询思路形成。"
+      }, 
+      {
+        "id": "zhou", "short": "周", "name": "咨询师 周", "degree": "应用心理硕士（临床方向）", "years": "7年从业经验", 
+        "rating": "4.9（836评价）", "sessions": "1150+次", "mode": "在线视频", "duration": "50分钟", "fee": "¥550/次", "wait": "约5天", "schedule": "周四 20:00", 
+        "oneLine": "关注来访者在具体处境中的感受、表达与深层无意识模式。", 
+        "styleTags": ["关系议题", "深层探索", "边界梳理"], 
+        "clients": ["大学生", "青年职场人", "成年来访者"], 
+        "issues": ["人际压力", "关系冲突", "性格溯源", "自我边界"], 
+        "certs": ["中国心理学会注册系统注册助理心理师", "卫生部中级心理治疗师", "长期接受精神动力学个人体验与督导"], 
+        "exp": ["精神专科医院心理科进修 / 600小时+", "综合心理服务机构专职咨询师 / 1300小时+", "人际动力团体带领者 / 100小时+"], 
+        "train": ["中美精神分析联盟(CAPA)初级组", "客体关系取向连续培训", "精神科临床见习与诊断培训"], 
+        "disclosureMini": "工作过程中不使用生成式AI辅助。",
+        "disclosure": "AI披露声明：在工作过程中，我不使用生成式AI工具，而是由本人完成信息分析、问题理解与后续咨询思路形成。"
+      }, 
+      {
+        "id": "chen", "short": "陈", "name": "咨询师 陈", "degree": "发展与教育心理学硕士", "years": "5年从业经验", 
+        "rating": "4.8（801评价）", "sessions": "720+次", "mode": "在线视频", "duration": "50分钟", "fee": "¥450/次", "wait": "约2天", "schedule": "周二 19:30", 
+        "oneLine": "关注个体在压力、选择与身份发展中的困惑，陪伴寻找内在资源。", 
+        "styleTags": ["压力管理", "身份发展", "目标澄清"], 
+        "clients": ["大学生", "考研与求职阶段", "初入职场青年"], 
+        "issues": ["学业压力", "职业迷茫", "情绪困扰", "自我认同"], 
+        "certs": ["国家三级心理咨询师", "GCDF全球职业规划师", "接受系统督导与伦理培训"], 
+        "exp": ["高校心理与就业指导中心 / 1400小时+", "青年职场人心理支持项目 / 300小时+", "职业生涯规划团体辅导 / 120小时+"], 
+        "train": ["焦点解决短期治疗(SFBT)培训", "生涯发展与叙事疗法工作坊", "心理危机评估与干预培训"], 
+        "disclosureMini": "工作过程中不使用生成式AI辅助。",
+        "disclosure": "AI披露声明：在工作过程中，我不使用生成式AI工具，而是由本人完成信息分析、问题理解与后续咨询思路形成。"
+      }, 
+      {
+        "id": "xu", "short": "许", "name": "咨询师 许", "degree": "临床心理学硕士", "years": "8年从业经验", 
+        "rating": "4.8（915评价）", "sessions": "1410+次", "mode": "在线视频", "duration": "50分钟", "fee": "¥600/次", "wait": "约4天", "schedule": "周五 19:00", 
+        "oneLine": "重视帮助来访者梳理家庭系统互动模式与关系中的情绪反应。", 
+        "styleTags": ["亲密关系", "家庭系统", "情绪觉察"], 
+        "clients": ["伴侣/夫妻", "青年职场人", "成年来访者"], 
+        "issues": ["亲密关系冲突", "原生家庭创伤", "情绪调节", "婚恋抉择"], 
+        "certs": ["中国心理卫生协会首批认证咨询师", "EFT情绪取向伴侣治疗认证候选", "接受系统性家庭治疗督导"], 
+        "exp": ["婚姻家庭咨询专科机构 / 1500小时+", "高校心理中心兼职咨询师 / 600小时+", "伴侣沟通工作坊导师 / 150小时+"], 
+        "train": ["结构派家庭治疗连续培训", "EFT情绪取向伴侣咨询高阶培训", "创伤知情照护(TIC)训练"], 
+        "disclosureMini": "工作过程中不使用生成式AI辅助。",
+        "disclosure": "AI披露声明：在工作过程中，我不使用生成式AI工具，而是由本人完成信息分析、问题理解与后续咨询思路形成。"
+      }
+    ];
+
+    function startStudy() { document.getElementById('cover').classList.add('hidden'); document.getElementById('app').classList.remove('hidden'); }
+    function chips(items, cls='chip') { return `<div class="chip-row">${items.map(i => `<span class="${cls}">${i}</span>`).join('')}</div>`; }
+    function listify(items) { return `<ul>${items.map(i => `<li>${i}</li>`).join('')}</ul>`; }
+
+    function disclosureBox(text) {
+      if (!text) return '';
+      const cleanText = text.replace(/^AI披露声明：/, '');
+      return `
+        <div class="disclosure">
+          <div class="disclosure-title">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            服务特别说明
+          </div>
+          <div class="disclosure-body">${cleanText}</div>
+        </div>
+      `;
+    }
+
+    function miniDisclosureBox(miniText) {
+      if (!miniText) return '';
+      return `
+        <div class="disclosure-mini">
+          <div class="disclosure-mini-title">
+            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            服务特别说明
+          </div>
+          <div class="disclosure-mini-body">${miniText}</div>
+        </div>
+      `;
+    }
+
+    function renderList() {
+      const cards = document.getElementById('cards');
+      cards.innerHTML = counselors.map(c => `
+        <article class="card" id="card-${c.id}" onclick="showDetail('${c.id}')">
+          <div class="card-header"><div class="avatar">${c.short}</div><div><div class="name">${c.name}</div><div class="meta-top">${c.degree} · ${c.years}</div></div></div>
+          <div class="mini-meta"><span>⭐ ${c.rating}</span><span>${c.mode}</span></div>
+          <div class="intro-line">"${c.oneLine}"</div>
+          ${chips(c.styleTags, 'mini-chip')}
+          ${miniDisclosureBox(c.disclosureMini)}
+        </article>
+      `).join('');
+    }
+
+    function renderDetails() {
+      const details = document.getElementById('details');
+      details.innerHTML = counselors.map(c => `
+        <section id="detail-${c.id}" class="detail-card">
+          <div class="detail-header-wrap"><div class="detail-header"><div class="avatar large">${c.short}</div><div><div class="detail-name-row"><span class="name">${c.name}</span></div><div class="meta-top">${c.degree} · ${c.years}</div></div></div></div>
+          <div class="stat-grid">
+            <div class="stat-item"><span class="stat-label">累计咨询</span><span class="stat-value">${c.sessions}</span></div>
+            <div class="stat-item"><span class="stat-label">咨询费用</span><span class="stat-value" style="color:#004098;">${c.fee}</span></div>
+            <div class="stat-item"><span class="stat-label">预计等待</span><span class="stat-value">${c.wait}</span></div>
+            <div class="stat-item"><span class="stat-label">最近可约</span><span class="stat-value">${c.schedule}</span></div>
+          </div>
+          ${disclosureBox(c.disclosure)}
+          <div class="block"><h3>专长领域</h3>${chips(c.issues)}</div>
+          <div class="block"><h3>适用人群</h3>${chips(c.clients)}</div>
+          <div class="block"><h3>专业资质</h3>${listify(c.certs)}</div>
+          <div class="block"><h3>执业与受训经历</h3>${listify(c.exp.concat(c.train))}</div>
+        </section>
+      `).join('');
+    }
+
+    function showDetail(id) {
+      document.getElementById('empty').classList.add('hidden');
+      document.querySelectorAll('.detail-card').forEach(el => el.classList.remove('active'));
+      document.getElementById(`detail-${id}`).classList.add('active');
+      document.querySelectorAll('.card').forEach(el => el.classList.remove('selected'));
+      document.getElementById(`card-${id}`).classList.add('selected');
+    }
+
+    renderList();
+    renderDetails();
+  </script>
+</body>
+</html>
